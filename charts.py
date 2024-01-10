@@ -90,20 +90,20 @@ class user_obj:
 # Clear console screen for better visualisation
 os.system("cls")
 
-# Create a Flask app instance and set a secret key to handle sessions
-app = Flask(__name__)
-app.secret_key = 'enzo'
+# Create a Flask charts instance and set a secret key to handle sessions
+charts = Flask(__name__)
+charts.secret_key = 'enzo'
 
 
 
 # Define route to render index.html template
-@app.route('/')
+@charts.route('/')
 def index():
     error_state = request.args.get('error_state', 'hidden')  
     error_message = request.args.get('error_message', '')    
     return render_template('index.html', visible = error_state, error = error_message)
 
-@app.route('/land')
+@charts.route('/land')
 def land():
     if 'user_logged' not in session or session['user_logged'] == None:
         return redirect('/')
@@ -126,7 +126,7 @@ def land():
         types.append(aux_charts['type'])
     return render_template('land.html', user_name = session['user_logged'],profile_pic =  img_pic, titles = titles, types = types)
 
-@app.route('/land/<title>')
+@charts.route('/land/<title>')
 def chart_page(title):
     if 'user_logged' not in session or session['user_logged'] == None:
         return redirect('/')
@@ -258,14 +258,14 @@ def chart_page(title):
             return render_template('chart_page.html',comments = comments_array,commenters = commenter_array, #comenters_pic = commenter_pic_array,
                                    user_name = session['user_logged'],profile_pic =  img_pic, chart_description = aux_desc, chart_tittle=aux_title,chart_topic = desimplify_topics(aux_topic),chart_topic2 = desimplify_topics(aux_topic2), pie_chart_json = pie_chart_json, chart_creation = aux_creation, chart_author = aux_author )
         
-@app.route('/comment',methods=['POST','GET',])
+@charts.route('/comment',methods=['POST','GET',])
 def comment():
     comment = request.form['comentario']
     url = request.form['chart_url']
     col_comments.insert_one({'comment':comment,'user':session['user_logged'],'chart_name':url})
     return redirect(request.referrer)
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
-@app.route('/criar-chart')
+@charts.route('/criar-chart')
 def create_chart():
     usercheck = col_users.find({"user":session['user_logged']})
     for info in usercheck:
@@ -284,7 +284,7 @@ def create_chart():
         sub_array.append(info['sub_topic'])
     return render_template('create_chart.html',user_name = session['user_logged'],profile_pic =  img_pic,topics = combo_topics["ava_topic"], sub_topic = sub_array)
 
-@app.route('/inserir-chart',methods=['POST',])
+@charts.route('/inserir-chart',methods=['POST',])
 def insert_chart():
     
     chart_tittle = request.form['txttitulo']
@@ -307,7 +307,7 @@ def insert_chart():
     return redirect(f'/land/{chart_tittle}')
 
 
-@app.route('/profile')
+@charts.route('/profile')
 def profile():
     usercheck = col_users.find({"user":session['user_logged']})
     for info in usercheck:
@@ -323,7 +323,7 @@ def profile():
     session['id'] = str(aux_id)
     return render_template('profile.html',user_name = session['user_logged'],password = aux_pass,email = aux_email,profile_pic =  img_pic,name = session['name'],user=session['user_logged'])
 
-@app.route('/profile/change_pic', methods=['POST',])
+@charts.route('/profile/change_pic', methods=['POST',])
 def cng_pic():
     pic = request.files['img']
     new_pic = base64.b64encode(pic.read()).decode('utf-8')
@@ -332,14 +332,14 @@ def cng_pic():
     return redirect('/profile')
 
 
-@app.route('/profile/change_email')
+@charts.route('/profile/change_email')
 def cng_email():
     return render_template('email.html',user_name = session['user_logged'])
-@app.route('/profile/change_password')
+@charts.route('/profile/change_password')
 def cng_password():
     return render_template('password.html',user_name = session['user_logged'])
 
-@app.route('/profile/mycharts')
+@charts.route('/profile/mycharts')
 def mycharts():
     usercheck = col_users.find({"user":session['user_logged']})
     for info in usercheck:
@@ -360,7 +360,7 @@ def mycharts():
         types.append(aux_charts['type'])
     return render_template("my_charts.html", chart_title = titles, user_name=session['user_logged'])
 
-@app.route('/adicionar-informações')
+@charts.route('/adicionar-informações')
 def add_info():
     usercheck = col_users.find({"user":session['user_logged']})
     for info in usercheck:
@@ -374,7 +374,7 @@ def add_info():
     session['id'] = str(aux_id)
     return render_template('add_info.html', user_name = session['user_logged'],profile_pic =  img)
 
-@app.route('/inserir-info',methods=['POST',])  
+@charts.route('/inserir-info',methods=['POST',])  
 def insert_info():
         
         question_1 = "Animal Favorito"
@@ -469,7 +469,7 @@ def insert_info():
 
         return redirect('/land')
 # Define route for registration form submission
-@app.route('/registrar', methods=['POST',])
+@charts.route('/registrar', methods=['POST',])
 def regis():
     # Create a new user object with form data
     new_user = user_obj(
@@ -534,8 +534,8 @@ def regis():
     return redirect('/land')
 
 # Define route for authentication of user
-@app.route('/logar',methods=['POST',])
-# Run the Flask app
+@charts.route('/logar',methods=['POST',])
+# Run the Flask charts
 def logar():
   # Retrieve the username and password submitted in the login form
     username = request.form['txtusuariologin']
@@ -568,11 +568,11 @@ def logar():
         error_message = "Usuario não existe!!"
         return redirect(f'/?error_state={error_state}&error_message={error_message}')
 
-@app.route('/logout',methods=['POST',])
+@charts.route('/logout',methods=['POST',])
 def logout():
    if 'user_logged' not in session or session['user_logged'] == None:
         return redirect('/') 
    session['user_logged'] = None
    return redirect('/')
 
-#app.run()
+#charts.run()
