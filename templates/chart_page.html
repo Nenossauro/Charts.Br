@@ -3,15 +3,34 @@
     <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
     <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
     <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js"></script>
     <!--   M A I N   -->
-    <main>
+    <main class="chart-main">
+    <div class="top-wrapper-div">
         <section class="chart-section">
             <div class="inner-span-section-div">
                 <span>
-                    {{chart_tittle}}! 🤗
+                    {{chart_tittle}}!
                 </span>
+                <div class="like-div">
+                    <button x-data="{
+                        state: 'Unliked',
+                        usedKeyboard: false,
+                        async updateState(to) {
+                            this.state = 'Saving'
+                            await new Promise(resolve => setTimeout(resolve, 1000))
+                            this.state = to
+                        }
+                      }" :class="{
+                        'like unliked': state === 'Unliked',
+                        'like saving': state === 'Saving',
+                        'like liked': state === 'Liked',
+                        'focus:outline-none': !usedKeyboard
+                      }" @click="updateState(state === 'Unliked' ? 'Liked' : 'Unliked')" @keydown.window.tab="usedKeyboard = true">
+                        <span class="like-icon like-icon-state" aria-label="state" x-text="state" aria-live="polite">Unliked</span>
+                      </button>
+                </div>
             </div>
-
             <div class="inner-content-section-div">
                 <div class="main-charts-section" id="chart">
                     <script>
@@ -27,7 +46,6 @@
 
 
         <aside class="chart-aside">
-
             <div class="inner-info-aside-div">
                 <div class="info-aside-div">
                     <!--   CRIADOR   -->
@@ -70,27 +88,39 @@
                              </ul>
                         </div>
                     </div>
-                    <div class="topic-div">
-                        <div class="topic-div-span">
-                            Comentários:
-                        </div>
-                        <form method="post" action="/comment">
-                            <textarea  name="comentario" maxlength="1000" ></textarea>
-                            <input type="text" name="chart_url" value="{{chart_tittle}}" style="display: none;">
-                            <input type="submit" name="enviar" value="comentar">
-                        </form>
-                        <div class="topic-div-content">
-                            {%for comment in comments%}
-                                {{comment}}<br>
-                            {%endfor%}
-                        </div>
-                    </div>
-
-                    
-                    
                 </div>
             </div>
         </aside>
+    </div>
+
+        <div class="comment-wrapper-div">
+            <div class="comment-title-span">
+                <span>Comentários ({{num_comments}})</span>
+            </div>
+            <div class="new-comment-div">
+                
+                <div class="new-comment-div-img">
+                    <img src="{{profile_pic}}">
+                </div>
+                <form method="post" action="/comment">
+                    <input type="text" name="comentario">
+                    <input type="text" name="chart_url" value="{{chart_tittle}}" style="display: none;">
+                    <input id="new-comment-btn" type="submit" name="enviar" value="Enviar">
+                </form>
+            </div>
+            <div class="outer-comment-div">
+            {% for i in range(comments|length) %}
+            <div class="comment-div">
+                <div class="comment-div-username">
+                    <span>%{{commenters[i]}}</span>
+                </div>
+                <div class="comment-content">
+                    <span>{{ comments[i] }}</span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        </div>
     </main>
 
 {%endblock%}

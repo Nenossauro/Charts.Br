@@ -21,13 +21,62 @@
     <!--   S E C T I O N  -->
         <section class="addinfo-section">
             <form action="/inserir-info" method="post" class="inner-section-div">
+            <div class="special-info-div">
+                <div class="add-info-div">
+                    <span>
+                        Qual turma teve as melhores apresentações?
+                    </span>
+                    <div class="add-info-input-div">
+                        <select name="turma">
+                            <option>CMR1</option>
+                            <option>TIN1A</option>
+                            <option>TIN1B</option>
+                            <option>TAM1</option>
+                            <option>TME1</option>
+
+                            <option>CMR2</option>
+                            <option>TIN2A</option>
+                            <option>TIN2B</option>
+                            <option>TAM2</option>
+                            <option>TME2</option>
+
+                            <option>CMR3</option>
+                            <option>TIN3A</option>
+                            <option>TIN3B</option>
+                            <option>TIN3</option>
+                            <option>TME3</option>
+                            <option>TAM3</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="add-info-div">
+                    <span>
+                        Nosso site está sendo interessante?
+                    </span>
+                    <div class="add-info-input-div">
+                        <select name="Achou o site interessante">
+                            <option>Sim</option>
+                            <option>Não</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="add-info-div">
+                    <span>
+                        Como você veio até este evento? (Diga só o meio. Ex: "Onibus","A pé")
+                    </span>
+                    <div class="add-info-input-div">
+                        <input name="Como veio"type="text">
+                    </div>
+                </div>
+            </div>
+            <div class="addinfo-section-wrapper">
                 <div class="left-inner-section-div">
                     <div class="add-info-div">
                         <span>
                             Qual seu animal favorito?
                         </span>
                         <div class="add-info-input-div">
-                            <input required="true"  name="animal"type="text">
+                            <input  name="Animal Favorito"type="text">
                         </div>
                     </div>
                     <div class="add-info-div">
@@ -35,7 +84,7 @@
                             Qual sua musica favorita?
                         </span>
                         <div class="add-info-input-div">
-                            <input required="true" name="musica"type="text">
+                            <input name="Musica Favorita"type="text">
                         </div>
                     </div>
                     <div class="add-info-div">
@@ -43,7 +92,7 @@
                             Qual sua cor favorita?
                         </span>
                         <div class="add-info-input-div">
-                            <input required="true" name="cor"type="text">
+                            <input name="Cor Favorita"type="text">
                         </div>
                     </div>
                     <div class="add-info-div">
@@ -51,7 +100,7 @@
                             Qual sua idade?
                         </span>
                         <div class="add-info-input-div">
-                            <input required="true" name="idade"type="number">
+                            <input name="Idade"type="number">
                         </div>
                     </div>
                     <div class="add-info-div">
@@ -59,7 +108,7 @@
                             Quanto voce tem de altura (ex: "1,60")?
                         </span>
                         <div class="add-info-input-div">
-                            <input required="true" name="altura"type="number">
+                            <input name="Metros de Altura" type="text">
                         </div>
                     </div>
                     <div class="add-info-div">
@@ -67,7 +116,10 @@
                             Você já saiu do país?
                         </span>
                         <div class="add-info-input-div">
-                            <input required="true" name="pais"type="text">
+                            <select name="Já saiu do país">
+                                <option>Sim</option>
+                                <option>Não</option>
+                            </select>
                         </div>
                     </div>
                     <div class="add-info-div">
@@ -75,7 +127,10 @@
                             Você já saiu do estado?
                         </span>
                         <div class="add-info-input-div">
-                            <input required="true" name="estado"type="text">
+                            <select name="Já saiu do estado">
+                                <option>Sim</option>
+                                <option>Não</option>
+                            </select>
                         </div>
                     </div>
                     <div class="add-info-div">
@@ -83,7 +138,10 @@
                             Você trabalha?
                         </span>
                         <div class="add-info-input-div">
-                            <input required="true" name="trabalha"type="text">
+                            <select name="Está trabalhando">
+                                <option>Sim</option>
+                                <option>Não</option>
+                            </select>
                         </div>
                     </div>
                     <div class="add-info-div">
@@ -91,7 +149,7 @@
                             Quantos livros já leu esse ano?
                         </span>
                         <div class="add-info-input-div">
-                            <input required="true" name="livro_ano"type="number">
+                            <input name="Quantidade de livros lidos esse ano"type="number">
                         </div>
                     </div>
                     <div class="add-info-div">
@@ -99,25 +157,25 @@
                             Qual seu filme favorito?
                         </span>
                         <div class="add-info-input-div">
-                            <input required="true" name="filme"type="text">
+                            <input name="Filme Favorito"type="text">
                         </div>
                     </div>
                 </div>
                 <div class="right-inner-section-div">
                     <div class="add-info-div">
                         <span>
-                            Qual seu genero de filme favorito?
+                            Qual seu gênero de filme favorito?
                         </span>
                         <div class="add-info-input-div">
-                            <input required="true" name="filme_genero"type="text">
+                            <input name="Genero de Filme"type="text">
                         </div>
                     </div>
                     <div class="add-info-div">
                         <span>
-                            Qual seu genero de musica favorito?
+                            Qual seu gênero de música favorito?
                         </span>
                         <div class="add-info-input-div">
-                            <input required="true" name="musica_genero"type="text">
+                            <input name="Genero de Musica"type="text">
                         </div>
                     </div>
                     <div class="add-info-div">
@@ -125,7 +183,7 @@
                             Qual a cor dos seus olhos?
                         </span>
                         <div class="add-info-input-div">
-                            <input required="true" name="olhos"type="text">
+                            <input name="Cor dos olhos"type="text">
                         </div>
                     </div>
                     <div class="add-info-div">
@@ -133,7 +191,10 @@
                             Você está em um relacionamento romântico no momento?
                         </span>
                         <div class="add-info-input-div">
-                            <input required="true" name="relacionamento"type="text">
+                            <select name="Relacionamento romantico">
+                                <option>Sim</option>
+                                <option>Não</option>
+                            </select>
                         </div>
                     </div>
                     <div class="add-info-div">
@@ -141,7 +202,10 @@
                             Você tem animal de estimação??
                         </span>
                         <div class="add-info-input-div">
-                            <input required="true" name="pet"type="text">
+                            <select name="Tem pet" >
+                                <option>Sim</option>
+                                <option>Não</option>
+                            </select>
                         </div>
                     </div>
                     <div class="add-info-div">
@@ -149,15 +213,7 @@
                             Qual o melhor animal de estimação na sua opinião?
                         </span>
                         <div class="add-info-input-div">
-                            <input required="true" name="melhor_pet"type="text">
-                        </div>
-                    </div>
-                    <div class="add-info-div">
-                        <span>
-                            Nosso site está sendo interessante?
-                        </span>
-                        <div class="add-info-input-div">
-                            <input required="true" name="interessante"type="text">
+                            <input name="Melhor animal de estimação"type="text">
                         </div>
                     </div>
                     <div class="add-info-div">
@@ -165,15 +221,7 @@
                             Quantas refeições você já fez hoje?
                         </span>
                         <div class="add-info-input-div">
-                            <input required="true" name="refeicoes"type="number">
-                        </div>
-                    </div>
-                    <div class="add-info-div">
-                        <span>
-                            Como você veio até este evento? (Diga só o meio. Ex: "Onibus","A pé")
-                        </span>
-                        <div class="add-info-input-div">
-                            <input required="true" name="transporte"type="text">
+                            <input name="Quantidade de refeições no dia"type="number">
                         </div>
                     </div>
                     <div class="add-info-div">
@@ -181,7 +229,7 @@
                             Sua casa tem quantos quartos?
                         </span>
                         <div class="add-info-input-div">
-                            <input required="true" name="quartos"type="number">
+                            <input name="Quantidade de quartos em casa"type="number">
                         </div>
                     </div>
                 </div>
@@ -189,6 +237,8 @@
             <div class="alter-btn">
                 <input type="submit" id="btn" value="Salvar">
             </div>
+            </div>
+                
         </form>
         <script>
     

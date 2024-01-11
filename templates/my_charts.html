@@ -1,9 +1,14 @@
 {% extends 'base.html' %}
 {%block content%}
 
-
+<section class="no-charts-section">
+    <span>
+        {{message}}
+    </span>
+       
+</section>
 <main class="mycharts-main">
-
+    
     {%for titles in chart_title%}
         <div class="mycharts-div">
 

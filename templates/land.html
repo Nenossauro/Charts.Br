@@ -35,7 +35,7 @@
                     <span>Charts mais relevantes da semana</span>
                 </div>
                 <div class="link-left-div">
-                    {%for title in titles%}
+                    {%for title in relevant_titles%}
                     <a href="{{ url_for('chart_page', title=title) }}">{{title}}</a>
                     {%endfor%}
                 </div>
@@ -47,7 +47,7 @@
                     <span>Charts mais recentes</span>
                 </div>
                 <div class="link-middle-div">
-                    {%for title in titles%}
+                    {%for title in recent_titles%}
                     <a href="{{ url_for('chart_page', title=title) }}">{{title}}</a>
                     {%endfor%}
                 </div>

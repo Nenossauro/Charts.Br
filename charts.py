@@ -25,7 +25,7 @@ def update_user_data(session,question,question_awnser):
 
 # Define a user object class to represent user data
 class user_obj:
-    def __init__(self,user,name,email,pwrd,pwrdconf, pic):
+    def __init__(self,user,name,email,pwrd,pwrdconf,pic):
         self.user = user
         self.name = name
         self.email = email
@@ -43,13 +43,24 @@ class user_obj:
             'profile_img' :self.pic
 
         }
-    def __dict__(self):
-        return {
-            
-        }
-
-
-
+class user_check:
+    def __init__(self,user):
+        self.user = user
+    def check(self,ses):
+        usercheck = col_users.find({"user":ses})
+        for info in usercheck:
+            aux_user = info['user']
+            aux_img = info['profile_img']
+            aux_name = info['name']
+            aux_id = info['_id']
+            aux_email = info['email']
+            aux_pwd = info['password']
+        self.pwd = aux_pwd
+        self.email = aux_email
+        self.id = str(aux_id)
+        self.user = aux_user
+        self.pic = aux_img
+        self.name = aux_name
 
 # Clear console screen for better visualisation
 os.system("cls")
@@ -57,8 +68,6 @@ os.system("cls")
 # Create a Flask charts instance and set a secret key to handle sessions
 charts = Flask(__name__)
 charts.secret_key = 'enzo'
-
-
 
 # Define route to render index.html template
 @charts.route('/')
@@ -71,40 +80,32 @@ def index():
 def land():
     if 'user_logged' not in session or session['user_logged'] == None:
         return redirect('/')
-    usercheck = col_users.find({"user":session['user_logged']})
-    for info in usercheck:
-        aux_user = info['user']
-        aux_img = info['profile_img']
-        aux_name = info['name']
-        aux_id = info['_id']
-    session['user_logged'] = aux_user
-    img_pic = aux_img
-    session['name'] = aux_name
-    session['id'] = str(aux_id)
-    os.system("cls")
+    usercheck = user_check(user="")
+    usercheck.check(session['user_logged'])
+
     charts_data = col_charts.find()
+    dates = []
+    comments = []
     titles = []
-    types = []
     for aux_charts in charts_data:
+        dates.append((aux_charts['title'],aux_charts['creation_date']))
+        comments.append((aux_charts['title'],aux_charts['comments']))
         titles.append(aux_charts['title'])
-        types.append(aux_charts['type'])
-    return render_template('land.html', user_name = session['user_logged'],profile_pic =  img_pic, titles = titles, types = types)
+    dates.sort(key=lambda x: x[1], reverse=True)
+    comments.sort(key=lambda x: x[1], reverse=True)
+    relevant_titles  = [pair[0] for pair in comments]
+    recent_titles = [pair[0] for pair in dates]
+
+
+    return render_template('land.html', user_name = session['user_logged'],profile_pic =  usercheck.pic, relevant_titles = relevant_titles, recent_titles = recent_titles, titles = titles)
 
 @charts.route('/land/<title>')
 def chart_page(title):
     if 'user_logged' not in session or session['user_logged'] == None:
         return redirect('/')
-    usercheck = col_users.find({"user":session['user_logged']})
-    for info in usercheck:
-        aux_user = info['user']
-        aux_img = info['profile_img']
-        aux_name = info['name']
-        aux_id = info['_id']
-    session['user_logged'] = aux_user
-    img_pic = aux_img
-    session['name'] = aux_name
-    session['id'] = str(aux_id)
-
+    
+    usercheck = user_check(user="")
+    usercheck.check(session['user_logged'])
 
     chart_data = col_charts.find_one({"title": title})
     aux_title = chart_data['title']
@@ -112,6 +113,7 @@ def chart_page(title):
     aux_author = chart_data['creator']
     aux_type = chart_data['type']
     aux_desc = chart_data['description']
+    aux_comm = chart_data['comments']
     
     comments = col_comments.find({'chart_name':title})
     comments_array = []
@@ -121,12 +123,7 @@ def chart_page(title):
         comments_array.append(comment['comment'])
         commenter_array.append(comment['user'])
         #commenter_pic_array.append(comment['user_pic'])
-        
-
     if aux_type=="simple":
-
-
-        os.system("cls")
         aux_topic = chart_data['topic1']
         user_topics = []
         user_data = col_users.find({aux_topic: {'$exists': True}})
@@ -151,12 +148,11 @@ def chart_page(title):
 
 
 
-        return render_template('chart_page.html',comments = comments_array,commenters = commenter_array, #comenters_pic = commenter_pic_array
-                               user_name = session['user_logged'], profile_pic =  img_pic, chart_description = aux_desc, chart_tittle=title,chart_topic = aux_topic, pie_chart_json = pie_chart_json, chart_creation = aux_creation, chart_author = aux_author )
+        return render_template('chart_page.html',num_comments = aux_comm,comments = comments_array,commenters = commenter_array, #comenters_pic = commenter_pic_array
+                               user_name = session['user_logged'], profile_pic =  usercheck.pic, chart_description = aux_desc, chart_tittle=title,chart_topic = aux_topic, pie_chart_json = pie_chart_json, chart_creation = aux_creation, chart_author = aux_author )
     else:
 
         if chart_data['topic3'] == "":
-            os.system("cls")
             aux_topic = chart_data['topic1']
             aux_topic2 = chart_data['topic2']
             aux_subtopic = chart_data['subtopic2']
@@ -184,10 +180,9 @@ def chart_page(title):
             )
 
             pie_chart_json = pie_chart.to_json()
-            return render_template('chart_page.html',comments = comments_array,commenters = commenter_array, #comenters_pic = commenter_pic_array,
-                                   user_name = session['user_logged'],profile_pic =  img_pic, chart_description = aux_desc, chart_tittle=aux_title,chart_topic = aux_topic,chart_topic2 = aux_topic2, pie_chart_json = pie_chart_json, chart_creation = aux_creation, chart_author = aux_author )
+            return render_template('chart_page.html',num_comments = aux_comm,comments = comments_array,commenters = commenter_array, #comenters_pic = commenter_pic_array,
+                                   user_name = session['user_logged'],profile_pic =  usercheck.pic, chart_description = aux_desc, chart_tittle=aux_title,chart_topic = aux_topic,chart_topic2 = aux_topic2, pie_chart_json = pie_chart_json, chart_creation = aux_creation, chart_author = aux_author )
         else:
-            os.system("cls")
             aux_topic = chart_data['topic1']
             aux_topic2 = chart_data['topic2']
             aux_topic3 = chart_data['topic3']
@@ -219,34 +214,27 @@ def chart_page(title):
             )
 
             pie_chart_json = pie_chart.to_json()
-            return render_template('chart_page.html',comments = comments_array,commenters = commenter_array, #comenters_pic = commenter_pic_array,
-                                   user_name = session['user_logged'],profile_pic =  img_pic, chart_description = aux_desc, chart_tittle=aux_title,chart_topic = aux_topic,chart_topic2 = aux_topic2, pie_chart_json = pie_chart_json, chart_creation = aux_creation, chart_author = aux_author )
+            return render_template('chart_page.html',num_comments = aux_comm,comments = comments_array,commenters = commenter_array, 
+                                   user_name = session['user_logged'],profile_pic =  usercheck.pic, chart_description = aux_desc, chart_tittle=aux_title,chart_topic = aux_topic,chart_topic2 = aux_topic2, pie_chart_json = pie_chart_json, chart_creation = aux_creation, chart_author = aux_author )
         
 @charts.route('/comment',methods=['POST','GET',])
 def comment():
     comment = request.form['comentario']
     url = request.form['chart_url']
     col_comments.insert_one({'comment':comment,'user':session['user_logged'],'chart_name':url})
+    col_charts.update_one({'title':url},{'$inc':{'comments':1}})
     return redirect(request.referrer)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+             
 @charts.route('/criar-chart')
 def create_chart():
-    usercheck = col_users.find({"user":session['user_logged']})
-    for info in usercheck:
-        aux_user = info['user']
-        aux_img = info['profile_img']
-        aux_name = info['name']
-        aux_id = info['_id']
-    session['user_logged'] = aux_user
-    img_pic = aux_img
-    session['name'] = aux_name
-    session['id'] = str(aux_id)
+    usercheck = user_check(user="")
+    usercheck.check(session['user_logged'])
     combo_topics = col_users.find_one({'user':session['user_logged']})
     sub_topics = col_topics.find()
     sub_array = []
     for info in sub_topics:
         sub_array.append(info['sub_topic'])
-    return render_template('create_chart.html',user_name = session['user_logged'],profile_pic =  img_pic,topics = combo_topics["ava_topic"], sub_topic = sub_array)
+    return render_template('create_chart.html',user_name = session['user_logged'],profile_pic =  usercheck.pic,topics = combo_topics["ava_topic"], sub_topic = sub_array)
 
 @charts.route('/inserir-chart',methods=['POST',])
 def insert_chart():
@@ -263,29 +251,19 @@ def insert_chart():
 
 
     if chart_topic2 == "simple":
-        col_charts.insert_one({"title":chart_tittle,"creation_date":chart_date,"description":chart_description,
+        col_charts.insert_one({"comments":0,"title":chart_tittle,"creation_date":chart_date,"description":chart_description,
                           "topic1":chart_topic1,"type":"simple","creator":session['user_logged'],'creator_id':session['id']})
     else:
-        col_charts.insert_one({"title":chart_tittle,"creation_date":chart_date,"description":chart_description,
+        col_charts.insert_one({"comments":0,"title":chart_tittle,"creation_date":chart_date,"description":chart_description,
                           "topic1":chart_topic1,"topic2":chart_topic2,"subtopic2":chart_subtopic2.lower(),"topic3":chart_topic3,"subtopic3":chart_subtopic3,"type":"complex","creator":session['user_logged'],'creator_id':session['id']})
     return redirect(f'/land/{chart_tittle}')
 
 
 @charts.route('/profile')
 def profile():
-    usercheck = col_users.find({"user":session['user_logged']})
-    for info in usercheck:
-        aux_user = info['user']
-        aux_img = info['profile_img']
-        aux_name = info['name']
-        aux_id = info['_id']
-        aux_email = info['email']
-        aux_pass = info['password']
-    session['user_logged'] = aux_user
-    img_pic = aux_img
-    session['name'] = aux_name
-    session['id'] = str(aux_id)
-    return render_template('profile.html',user_name = session['user_logged'],password = aux_pass,email = aux_email,profile_pic =  img_pic,name = session['name'],user=session['user_logged'])
+    usercheck = user_check(user="")
+    usercheck.check(session['user_logged'])
+    return render_template('profile.html',user_name = session['user_logged'],password = usercheck.pwd,email = usercheck.email,profile_pic = usercheck.pic,name = session['name'],user=session['user_logged'])
 
 @charts.route('/profile/change_pic', methods=['POST',])
 def cng_pic():
@@ -305,16 +283,8 @@ def cng_password():
 
 @charts.route('/profile/mycharts')
 def mycharts():
-    usercheck = col_users.find({"user":session['user_logged']})
-    for info in usercheck:
-        aux_user = info['user']
-        aux_img = info['profile_img']
-        aux_name = info['name']
-        aux_id = info['_id']
-    session['user_logged'] = aux_user
-    img_pic = aux_img
-    session['name'] = aux_name
-    session['id'] = str(aux_id)
+    usercheck = user_check(user="")
+    usercheck.check(session['user_logged'])
     mychart = col_charts.find({"creator":session['user_logged']})
     titles = []
     types = []
@@ -326,110 +296,21 @@ def mycharts():
 
 @charts.route('/adicionar-informações')
 def add_info():
-    usercheck = col_users.find({"user":session['user_logged']})
-    for info in usercheck:
-        aux_user = info['user']
-        aux_img = info['profile_img']
-        aux_name = info['name']
-        aux_id = info['_id']
-    session['user_logged'] = aux_user
-    img = aux_img
-    session['name'] = aux_name
-    session['id'] = str(aux_id)
-    return render_template('add_info.html', user_name = session['user_logged'],profile_pic =  img)
+    usercheck = user_check(user="")
+    usercheck.check(session['user_logged'])
+    return render_template('add_info.html', user_name = session['user_logged'],profile_pic =  usercheck.pic)
 
 @charts.route('/inserir-info',methods=['POST',])  
 def insert_info():
-        
-        question_1 = "Animal Favorito"
-        question_1_awn=request.form['animal']
-        update_user_data(session['user_logged'],question_1.lower(),question_1_awn.lower().strip(" "))
+        info_questions = [ "Animal Favorito","Cor Favorita","Idade","Como veio","Tem pet", "Musica Favorita",
+                          "Já saiu do país","Metros de Altura","Quantidade de livros lidos esse ano","Já saiu do estado","Está trabalhando","Filme Favorito","Genero de Musica","Genero de Filme",
+                          "Cor dos olhos", "Relacionamento romantico","Melhor animal de estimação","Achou o site interessante","Quantidade de refeições no dia","Quantidade de quartos em casa"
 
 
-        question_1 = "Cor Favorita"
-        question_1_awn=request.form['cor']
-        update_user_data(session['user_logged'],question_1.lower(),question_1_awn.lower().strip(" "))
-        question_1 = "Idade"
-        question_1_awn=request.form['idade']
-        update_user_data(session['user_logged'],question_1.lower(),question_1_awn.lower().strip(" "))
-
-        question_1 = "Como veio"
-        question_1_awn=request.form['transporte']
-        update_user_data(session['user_logged'],question_1.lower(),question_1_awn.lower().strip(" "))
-
-        question_1 = "Tem pet"
-        question_1_awn=request.form['pet']
-        update_user_data(session['user_logged'],question_1.lower(),question_1_awn.lower().strip(" "))
-
-        question_1 = "Musica Favorita"
-        question_1_awn=request.form['musica']
-        update_user_data(session['user_logged'],question_1.lower(),question_1_awn.lower().strip(" "))
-
-        question_1 = "Já saiu do país"
-        question_1_awn=request.form['pais']
-        update_user_data(session['user_logged'],question_1.lower(),question_1_awn.lower().strip(" "))
-
-        question_1 = "Metros de Altura"
-        question_1_awn=request.form['altura']
-        update_user_data(session['user_logged'],question_1.lower(),question_1_awn.lower().strip(" "))
-        question_1 = "Quantidade de livros lidos esse ano"
-        question_1_awn=request.form['livro_ano']
-        update_user_data(session['user_logged'],question_1.lower(),question_1_awn.lower().strip(" "))
-
-        question_1 = "Já saiu do estado"
-        question_1_awn=request.form['estado']
-        update_user_data(session['user_logged'],question_1.lower(),question_1_awn.lower().strip(" "))
-
-
-        question_1 = "Está trabalhando"
-        question_1_awn=request.form['trabalha']
-        update_user_data(session['user_logged'],question_1.lower(),question_1_awn.lower().strip(" "))
-
-
-        question_1 = "Filme Favorito"
-        question_1_awn=request.form['filme']
-        update_user_data(session['user_logged'],question_1.lower(),question_1_awn.lower().strip(" "))
-
-
-        question_1 = "Genero de Musica"
-        question_1_awn=request.form['musica_genero']
-        update_user_data(session['user_logged'],question_1.lower(),question_1_awn.lower().strip(" "))
-
-
-        question_1 = "Genero de Filme"
-        question_1_awn=request.form['filme_genero']
-        update_user_data(session['user_logged'],question_1.lower(),question_1_awn.lower().strip(" "))
-
-        question_1 = "Cor dos olhos"
-        question_1_awn=request.form['olhos']
-        update_user_data(session['user_logged'],question_1.lower(),question_1_awn.lower().strip(" "))
-
-
-        question_1 = "Relacionamento romantico"
-        question_1_awn=request.form['relacionamento']
-        update_user_data(session['user_logged'],question_1.lower(),question_1_awn.lower().strip(" "))
-
-
-        question_1 = "Melhor animal de estimação"
-        question_1_awn=request.form['melhor_pet']
-        update_user_data(session['user_logged'],question_1.lower(),question_1_awn.lower().strip(" "))
-
-
-        question_1 = "Achou o site interessante"
-        question_1_awn=request.form['interessante']
-        update_user_data(session['user_logged'],question_1.lower(),question_1_awn.lower().strip(" "))
-
-
-        question_1 = "Quantidade de refeições no dia"
-        question_1_awn=request.form['refeicoes']
-        update_user_data(session['user_logged'],question_1.lower(),question_1_awn.lower().strip(" "))
-
-
-        question_1 = "Quantidade de quartos em casa"
-        question_1_awn=request.form['quartos']
-        update_user_data(session['user_logged'],question_1.lower(),question_1_awn.lower().strip(" "))
-
-    
+        ]
+        for info_question in info_questions:
+            info_awn = request.form[info_question]
+            update_user_data(session['user_logged'], info_question.lower(), info_awn.lower().strip(" "))
 
         return redirect('/land')
 # Define route for registration form submission
@@ -447,47 +328,41 @@ def regis():
     # Insert user data as a dictionary (JSON file) into the 'users' collection
     col_users.insert_one(new_user.__dict_user__())
     sessao = request.form['txtusuario']
-    question_1 = "País em que mora"
-    question_1_awn=request.form['txtpais']
-    update_user_data(sessao,question_1.lower(),question_1_awn.lower().strip(" "))
-    question_1 = "Estado em que mora"
-    question_1_awn=request.form['txtestado'] 
-    update_user_data(sessao,question_1.lower(),question_1_awn.lower().strip(" "))
-    question_1 = "Cidade em que mora"
-    question_1_awn=request.form['txtcidade']
-    update_user_data(sessao,question_1.lower(),question_1_awn.lower().strip(" "))
-    question_1 = "Cor do Cabelo"
-    question_1_awn=request.form['txtcorcabelo']
-    update_user_data(sessao,question_1.lower(),question_1_awn.lower().strip(" "))
-    question_1 = "Numero do calçado"
-    question_1_awn=request.form['txtcalcado']
-    update_user_data(sessao,question_1.lower(),question_1_awn.lower().strip(" "))
+    reg_questions = [
+    "País em que mora",
+    "Estado em que mora",
+    "Cidade em que mora",
+    "Cor do Cabelo",
+    "Numero do calçado"
+]
+    for reg_question in reg_questions:
+        reg_awn = request.form[reg_question]
+        update_user_data(sessao, reg_question.lower(), reg_awn.lower().strip(" "))
 
     username = request.form['txtusuario']
     password = request.form['txtsenha']
     # Search the 'users' collection in the database for a user with the specified username
     try:
-        usercheck = col_users.find({"user":username})
-        # Iterate over the search results (usually just one user document)
-        for info in usercheck:
-            aux_user = info['user']
-            aux_pass = info['password']
-            aux_img = info['profile_img']
-            aux_name = info['name']
-            aux_id = info['_id']
-        # Check if the submitted username matches any user in the database
-        if username == aux_user:
-            # If the username matches, check if the submitted password matches the stored password
-            if password == aux_pass:
-                # If both username and password match, store the username in the session
-                # Redirect the user to the '/land' page (landing page after successful login)
-                session['user_logged'] = aux_user
-                session['name'] = aux_name
-                session['id'] = str(aux_id)
-                return redirect('/land')
-            else:
-                # If the submitted password doesn't match, redirect to the index page (login page)
-                return redirect('/')
+        usercheck = user_check(user="")
+        usercheck.check(username)
+        #Iterate over the search results (usually just one user document)
+        #usercheck = col_users.find({"user":username})
+        
+        #for info in usercheck:
+            #aux_user = info['user']
+            #aux_pass = info['password']
+            #aux_img = info['profile_img']
+            #aux_name = info['name']
+            #aux_id = info['_id']'''
+        # If the username matches, check if the submitted password matches the stored password
+        if password == usercheck.pwd:
+            # If both username and password match, store the username in the session
+            # Redirect the user to the '/land' page (landing page after successful login)
+            session['user_logged'] = username
+            session['name'] = usercheck.name
+            session['id'] = str(usercheck.id)
+            return redirect('/land')
+            
         else:
             # If the submitted username doesn't match any user in the database, redirect to the index page
             return redirect('/')
@@ -506,21 +381,24 @@ def logar():
     password = request.form['txtsenhalogin']
     # Search the 'users' collection in the database for a user with the specified username
     try:
-        usercheck = col_users.find({"user":username})
-        # Iterate over the search results (usually just one user document)
-        for info in usercheck:
-            aux_user = info['user']
-            aux_pass = info['password']
-            aux_img = info['profile_img']
-            aux_name = info['name']
-            aux_id = info['_id']
+        usercheck = user_check(user="")
+        usercheck.check(username)
+        #Iterate over the search results (usually just one user document)
+        #usercheck = col_users.find({"user":username})
+        
+        #for info in usercheck:
+            #aux_user = info['user']
+            #aux_pass = info['password']
+            #aux_img = info['profile_img']
+            #aux_name = info['name']
+            #aux_id = info['_id']'''
         # If the username matches, check if the submitted password matches the stored password
-        if password == aux_pass:
+        if password == usercheck.pwd:
             # If both username and password match, store the username in the session
             # Redirect the user to the '/land' page (landing page after successful login)
-            session['user_logged'] = aux_user
-            session['name'] = aux_name
-            session['id'] = str(aux_id)
+            session['user_logged'] = username
+            session['name'] = usercheck.name
+            session['id'] = str(usercheck.id)
             return redirect('/land')
         else:
             # If the submitted password doesn't match, redirect to the index page (login page)
@@ -539,4 +417,4 @@ def logout():
    session['user_logged'] = None
    return redirect('/')
 
-#charts.run()
+charts.run()

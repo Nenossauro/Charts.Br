@@ -18,6 +18,8 @@
     --secondary-font-color: #fff;
     --link-font-color: #007AAE;
     --desc-title-color: #D90;
+
+    --error-background: #f44336;
 }
 .dark-mode{
     --background-color: #1a1a1a;
@@ -35,6 +37,8 @@
     --secondary-font-color: #000;
     --link-font-color: #007AAE;
     --desc-title-color: #7e3ce6;
+
+    --error-background: #710000;
 }
 
 @keyframes rotation {
@@ -46,6 +50,21 @@
     }
   }
 
+@keyframes rotate {	
+    to {
+		--angle: 360deg;
+	}
+}
+
+@property --angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+img{
+    object-fit: cover;
+}
 
 /* http://meyerweb.com/eric/tools/css/reset/ 
    v2.0 | 20110126
@@ -107,8 +126,9 @@ body{
 	background-color: var(--background-color);
 	/* rem equivalency */
     font-size: 1.6rem;
+    
 
-	/* overflow: hidden;
+	overflow-x: hidden;
 	/* inherit html proportions*/
 	width: 100%;
 	height: 100%;
@@ -144,21 +164,50 @@ body{
     position: absolute;
     right: 0;
     top: 0;
+    transition: 0.3s ease-in-out;
+    
+    color: var(--primary-font-color);
+
+    font-family: Fira Code;
 }
     .error-popup-div{
-        height: 5rem;
-        width: 15rem;
+        display: flex;
 
-        background-color: #cc1919;
+        height: fit-content;
+        width: auto;
+
+        background-color: var(--error-background);
         padding: 2rem;
         border-radius: 3rem;
         margin: 5rem;
 
+        border: 2px solid transparent;
         box-shadow: rgba(255, 255, 255, 0.2) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.9) 0px 0px 0px 1px;
         transition: 0.5s ease-in-out;
+        visibility: hidden;
     }
     .error-popup.show{
         visibility: visible;
+    }
+        .error-btn-div{
+            width: 5rem;
+            height: 5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+.error-popup .closebtn{
+    font-size: 4rem;
+    font-weight: 700;
+    transition: 0.3s ease-in-out;
+    cursor: pointer;
+    margin: 0;
+}
+.error-popup .closebtn:hover{
+    color: #000;
+}
+    .error-popup .closebtn span{
+        margin:0;
     }
 
 /*   N A V    B A R    */
@@ -199,13 +248,12 @@ nav{
     }    
 
 	/*   USER IMAGE    */
-	.user-img{
-		height: auto;
+	.user-img, .user-img img{
+		height: 100%;
+        width: 100%;
 		cursor: pointer;
+        aspect-ratio: 1/1;
 	}
-        .user-img img{
-            overflow: hidden;
-        }
 
 
 /*   N A V B A R   D I V I D E   */
@@ -339,7 +387,6 @@ main{
 /* MAIN	*/
 .main-start{
     height: auto;
-	position: relative;
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -378,11 +425,10 @@ main{
 		.registration-div, .login-div{
 			position: absolute;
 			background-color: var(--primary-color);
-			width: 50%;
+			width: 70%;
 			height: auto;
-            left: 25%;
 
-			transform: translateX(+100vw); 
+			transform: translateX(+110vw); 
 			transition: 0.8s;
 
 			border-radius: 4rem;
@@ -393,15 +439,13 @@ main{
 			display: flex;
 			flex-direction: column;
 		}
-            .registration-div{
-                height: 80%;
-            }
 		.inner-registration-div span, .inner-login-div span{
 				font-size: 3rem;
 				font-weight: 600;
                 color: var(--primary-font-color);
 			}
-			.inner-registration-div input, .inner-login-div input{ 
+			.inner-registration-div input, .inner-login-div input,
+            .inner-registration-div select{ 
 				width: auto;
 				height: 3rem;
 				color: #000;
@@ -415,6 +459,9 @@ main{
 				background-color: var(--input-background);
 				box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px, rgb(51, 51, 51) 0px 0px 0px 3px;
 			}
+                .inner-registration-div select{
+                    height: 5rem;
+                }
 
 			/* registration div */
 			.registration-div.entry{
@@ -476,7 +523,7 @@ main{
 .home-main{
     display: flex;
     flex-direction: column;
-    height: calc(100vh - 18.5rem);
+    height: calc(100vh - 8.5rem);
 }
 .main-section-wrap{
     display: flex;
@@ -834,17 +881,45 @@ main{
             display: flex;
             flex-direction: column;
             background-color: var(--primary-color);
-            width: inherit;
             margin: 5rem 5rem 0rem 5rem;
             padding: 5rem 5rem 2rem 5rem;
             border-radius: 8rem 8rem 0rem 0rem;
             box-shadow: 0px 10px 20px 2px rgba(0, 0, 0, 0.25);
+        }
+            .addinfo-section form{
+                display: flex;
+                flex-direction: column;
+            }
+            .addinfo-section select{
+                width: 90%;
+                border: none;
+                border-radius: 1rem;
+                font-size: 3rem;
+                padding: 1rem;
+                font-family: Inter Tight;
+                font-weight: lighter;
+                resize: none;
+                border: 1px solid var(--primary-font-color)
+            }
+
+        .special-info-div .add-info-div{
+            justify-content: space-between;
+            background-color: var(--secondary-font-color);
+            padding: 2.5rem;
+            border-radius: 2rem;
+            border: 5px solid transparent;
+            border-image: conic-gradient(
+			from var(--angle),red,yellow,lime,aqua,blue,magenta,red)1;
+        animation: 10s rotate linear infinite;
         }
             .addinfo-section .inner-section-div{
                 display: flex;
 
                 overflow-x: hidden;
                 overflow-y: scroll;
+            }
+            .addinfo-section .addinfo-section-wrapper{
+                display: flex;
             }
                 .add-info-div{
                     display: flex;
@@ -902,7 +977,6 @@ main{
                             transform: translateY(-5px);
                             box-shadow: 0px 10px 20px 2px rgba(0, 0, 0, 0.25);
                         }
-
                             /*   E D I T   P R O F I L E   */
 
     .editprofile-main{
@@ -913,7 +987,7 @@ main{
     }
         .editprofile-section{
                 width: 100%;
-                height: 100%;
+                height: auto;
                 display: flex;
                 padding: 5% 15% 0 0;
             }
@@ -1009,6 +1083,12 @@ main{
                             background: var(--input-background);
                             margin-bottom: 1rem;
                             cursor: not-allowed;
+                            display: flex;  
+                            width: 100%;
+                            color: #000;
+                            font-family: Inter Tight;
+                            font-size: 3rem;
+                            font-weight: 600;
                         }
 
                         .low-inner-article-div .input-div .input-inner-div{
@@ -1148,20 +1228,27 @@ main{
 
     .chart-main{
         height: auto;
+        flex-direction: column;
+    }
+    .top-wrapper-div{
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        margin-top: 5rem;
     }
         /*   S E C T I O N   */
         .chart-section{
             width: 65%;
             height: auto;
-            margin: 5rem;
+            padding: 5rem;
 
             display: flex;
             flex-direction: column;
         }
             .inner-span-section-div{
                 display: flex;
+                align-items: center;
                 padding: 0 5rem 5rem 0;
-
                 color: var(--desc-title-color);
                 font-family: Fira Code;
                 font-size: 6rem;
@@ -1179,6 +1266,98 @@ main{
             width: 75%;
             height: auto;
         }
+
+                /* COMENTARIOS */
+                .comment-wrapper-div{
+                    display: flex;
+                    flex-direction: column;
+                    padding: 5rem;
+                    margin: auto;
+                    margin-bottom: 10rem;
+                    width: 80%;
+                    border-radius: 5rem;
+                    background-color: var(--darker-background-color);
+                    box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+                }
+                    .comment-wrapper-div form{
+                        width: 100%;
+                        display: flex;
+                        align-items: center;
+                    }
+                        .comment-wrapper-div form input{
+                            width: 100%;
+                            height: 3rem;
+                            color: #000;
+                            padding: 1rem 1.5rem 1rem 1.5rem;
+                            font-size: 2.5rem;
+                            font-weight: 200;
+                            border-radius: 1rem;
+                            outline: 0;
+                            border: 0;
+                            margin: 0 1.5rem 0 1.5rem;
+                        
+                            background-color: var(--input-background);
+                            box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px, rgb(51, 51, 51) 0px 0px 0px 3px;
+                        }
+                        #new-comment-btn{
+                            width: 12rem;
+                            height: 5rem;
+                            border-radius: 4rem;
+                            background: var(--secondary-color);
+                            box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+                            transition: transform ease 0.5s, box-shadow ease 0.5s;
+                            border: none;
+                            font-size: 2rem;
+                            font-weight: 600;
+                            color: #fff;
+                            cursor: pointer;
+                            font-family: Inter Tight;
+                            font-weight: 500;
+                        }
+                    .comment-title-span{
+                        color: var(--primary-font-color);
+                        font-weight: bold;
+                        font-size: 6rem;
+                        margin-bottom: 5rem;
+                    }
+                        .comment-title-span span{
+                            margin: 0;
+                        }
+                    .new-comment-div, .comment-div{
+                        display: flex;
+                        width: 100%;
+                        height: auto;
+                    }
+                        .new-comment-div-img, .new-comment-div-img img,
+                        .comment-div-img, .comment-div-img img{
+                            cursor: pointer;
+                            aspect-ratio: 1/1;
+                            height: 8rem;
+                        }
+                    .outer-comment-div{
+                        display: flex;
+                        flex-direction: column-reverse;
+                    }
+                        .comment-div{
+                            width: auto;
+                            margin-top: 5rem;
+                            display: flex;
+                            flex-direction: column;
+                            padding: 2.5rem;
+                            border: 5px solid #000;
+                        }
+                            .comment-div span{
+                                color: var(--primary-font-color);
+                                font-family: Inter Tight;
+                                font-size: 2.5rem;
+                                font-style: normal;
+                                font-weight: 500;
+                                line-height: normal;
+                            }
+                                .comment-div-username span{
+                                    color: var(--secondary-color);
+                                    margin: 0;
+                                }
 
         /*   A S I D E   */
         .chart-aside{
@@ -1365,9 +1544,6 @@ main{
     }
 }
 @media screen and (max-width: 700px) {
-      html, body {
-        
-      }
             
     .logo{
         padding-left: 0;
@@ -1440,6 +1616,9 @@ main{
         width:inherit;
         margin: 1rem 0 5rem 0;
     }
+    .add-info-div input{
+        width: auto;
+    }
 }
 @media screen and (max-width: 460px) {
     .inner-section-div{
@@ -1450,6 +1629,7 @@ main{
         align-self: normal;
         width: 100%;
     }
+    
 }
 
 /* EDIT PROFILE */
@@ -1588,11 +1768,22 @@ main{
 }
 
 /* CHART PAGE */
+@media screen and (max-width: 1580px) {
+    .top-wrapper-div{
+        flex-direction: column;
+    }
+    .chart-aside{
+        width: 80%;
+        margin: auto;
+    }
+    .chart-section{
+        margin-bottom: 0;
+    }
+}
 @media screen and (max-width: 1300px) {
     .chart-section .inner-span-section-div{
         text-align: center;
         padding: 0;
-        margin-bottom: 5rem;
     }
     .chart-main{
         flex-direction: column;
@@ -1601,26 +1792,51 @@ main{
     .chart-aside{
         width: 65%;
     }
+        .chart-main .inner-span-section-div{
+            margin: 0 2rem 5rem 2rem;
+            width: 90vw;
+        }
     .inner-content-section-div{
         margin: 0;
     }
 }
 @media screen and (max-width: 1100px) {
-    .chart-section{
-        width: 90%;
+   .chart-section{
+        width: 100%;
+        align-items: center ;
+        padding: 0;
+    }
+    .chart-section .inner-span-section-div{
+        justify-content: center;
+    }
+    .chart-section .inner-span-section-div span{
+        font-size: 4rem;
     }
 }
 @media screen and (max-width: 780px){
     .chart-aside{
-        width: 90%;
+        width: auto;
     }
 }
 @media screen and (max-width: 515px) {
     .chart-aside{
         width: auto;
+        margin: 0;
     }
     .chart-section .inner-span-section-div{
         font-size: 4rem;
+    }
+    .comment-wrapper-div{
+        border-radius: 0;
+        margin:0;
+    }
+}
+@media screen and (max-width: 450px) {
+    .comment-title-span{
+        font-size: 5rem;
+    }
+    .author-div-span, .date-div-span, .desc-div-span, .topic-div-span{
+        font-size: 3rem;
     }
 }
 
@@ -1656,6 +1872,7 @@ main{
         grid-template-columns: 50% 50%;
     }
     .registration-div{
+        width: auto;
         height: 90%;
         overflow-y: scroll;
     }
@@ -1720,6 +1937,7 @@ main{
         height: auto;
         width: 100%;
         border-radius: 10rem 10rem 0 0;
+        overflow-y: hidden;
     }
         .registration-div .btn-div, .login-div .btn-div{
             font-size: 3rem;

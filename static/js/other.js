@@ -44,15 +44,6 @@ $(document).ready(function() {
     $('.alter-btn #btn').click(function(event) {
       $('.loading-page').addClass('show')
     })
-  
-    
-
-
-
-  
-
-  
-
       // USER CONFIG POP-UP IMG ONCLICK
       $('.user-img').click(function(event) {
   
@@ -99,12 +90,6 @@ $(document).ready(function() {
                 inputThird.removeClass('show');
             }
         });
-  
-  
-        
-       
-      
-  
         //APARECER TROCAR SENHA/EMAIL
   
         $('.alterBtn').on('click', function(){
