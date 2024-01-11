@@ -23,42 +23,6 @@ def update_user_data(session,question,question_awnser):
     col_users.update_one({'user':session,'sub_topic': {'$ne': question}},{'$addToSet':{'ava_topic':question}})
     col_topics.update_one({'topic':question,'sub_topic': {'$ne': question_awnser}},{'$addToSet': {'sub_topic': question_awnser}})
 
-def new_simplify_topics(info):
-   
-    # add first letter
-    oupt = info[0]
-     
-    # iterate over string
-    for i in range(1, len(info)):
-        if info[i-1] == ' ':
-           
-            # add letter next to space
-            oupt += info[i]
-    oupt = oupt.lower()
-    return oupt
-def desimplify_topics(info):
-    if info == "stt":
-        return "Estado onde mora"
-    elif info == "hair":
-        return "Cor do Cabelo"
-    elif info == "shoe":
-        return "Numero do Calçado"
-    elif info == "cty":
-        return "Cidade onde mora"
-    else:
-        return info
-def simplify_topics(info):
-    # add first letter
-    oupt = info[0]
-     
-    # iterate over string
-    for i in range(1, len(info)):
-        if info[i-1] == ' ':
-           
-            # add letter next to space
-            oupt += info[i]
-    oupt = oupt.lower()
-    return oupt
 # Define a user object class to represent user data
 class user_obj:
     def __init__(self,user,name,email,pwrd,pwrdconf, pic):
@@ -221,7 +185,7 @@ def chart_page(title):
 
             pie_chart_json = pie_chart.to_json()
             return render_template('chart_page.html',comments = comments_array,commenters = commenter_array, #comenters_pic = commenter_pic_array,
-                                   user_name = session['user_logged'],profile_pic =  img_pic, chart_description = aux_desc, chart_tittle=aux_title,chart_topic = desimplify_topics(aux_topic),chart_topic2 = desimplify_topics(aux_topic2), pie_chart_json = pie_chart_json, chart_creation = aux_creation, chart_author = aux_author )
+                                   user_name = session['user_logged'],profile_pic =  img_pic, chart_description = aux_desc, chart_tittle=aux_title,chart_topic = aux_topic,chart_topic2 = aux_topic2, pie_chart_json = pie_chart_json, chart_creation = aux_creation, chart_author = aux_author )
         else:
             os.system("cls")
             aux_topic = chart_data['topic1']
@@ -256,7 +220,7 @@ def chart_page(title):
 
             pie_chart_json = pie_chart.to_json()
             return render_template('chart_page.html',comments = comments_array,commenters = commenter_array, #comenters_pic = commenter_pic_array,
-                                   user_name = session['user_logged'],profile_pic =  img_pic, chart_description = aux_desc, chart_tittle=aux_title,chart_topic = desimplify_topics(aux_topic),chart_topic2 = desimplify_topics(aux_topic2), pie_chart_json = pie_chart_json, chart_creation = aux_creation, chart_author = aux_author )
+                                   user_name = session['user_logged'],profile_pic =  img_pic, chart_description = aux_desc, chart_tittle=aux_title,chart_topic = aux_topic,chart_topic2 = aux_topic2, pie_chart_json = pie_chart_json, chart_creation = aux_creation, chart_author = aux_author )
         
 @charts.route('/comment',methods=['POST','GET',])
 def comment():
