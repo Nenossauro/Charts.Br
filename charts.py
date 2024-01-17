@@ -415,4 +415,4 @@ def logout():
    session['user_logged'] = None
    return redirect('/')
 
-charts.run()
+#charts.run()
