@@ -7,13 +7,19 @@
     <section class="editprofile-section">
             <aside class="alter-profile-image">
                 <div class="alter-profile-image-button">
-                    <form method="post" action="/profile/change_pic"
+                    <form method="post" id="change_pic" action="/profile/change_pic"
                         enctype="multipart/form-data">
                         <input id="files" name="img" type="file"
-                            accept="image/x-png,image/jpeg" value="💾">
-                        <input type="submit" value="💾">
+                            accept="image/x-png,image/jpeg" value="💾" onchange="submit()">
 
                     </form>
+                    <script>
+                        function submit() {
+                            var form = document.getElementById('change_pic');
+                            form.submit();
+                            location.reload();
+                        }
+                    </script>
                 </div>
             </aside>
 

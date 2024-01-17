@@ -88,16 +88,15 @@ def land():
     comments = []
     titles = []
     for aux_charts in charts_data:
-        dates.append((aux_charts['title'],aux_charts['creation_date']))
-        comments.append((aux_charts['title'],aux_charts['comments']))
-        titles.append(aux_charts['title'])
+        dates.append((aux_charts['title'],aux_charts['creation_date'],aux_charts['creator']))
+        comments.append((aux_charts['title'],aux_charts['comments'],aux_charts['creator'],aux_charts['creation_date']))
+        titles.append((aux_charts['title'],aux_charts['creator'],aux_charts['creation_date']))
     dates.sort(key=lambda x: x[1], reverse=True)
     comments.sort(key=lambda x: x[1], reverse=True)
-    relevant_titles  = [pair[0] for pair in comments]
-    recent_titles = [pair[0] for pair in dates]
 
 
-    return render_template('land.html', user_name = session['user_logged'],profile_pic =  usercheck.pic, relevant_titles = relevant_titles, recent_titles = recent_titles, titles = titles)
+
+    return render_template('land.html', user_name = session['user_logged'],profile_pic =  usercheck.pic, relevant_titles = comments, recent_titles = dates, titles = titles)
 
 @charts.route('/land/<title>')
 def chart_page(title):
@@ -289,10 +288,9 @@ def mycharts():
     titles = []
     types = []
     for aux_charts in mychart:
-        print(aux_charts['title'])
         titles.append(aux_charts['title'])
         types.append(aux_charts['type'])
-    return render_template("my_charts.html", chart_title = titles, user_name=session['user_logged'])
+    return render_template("my_charts.html",profile_pic =  usercheck.pic, chart_title = titles, user_name=session['user_logged'])
 
 @charts.route('/adicionar-informações')
 def add_info():

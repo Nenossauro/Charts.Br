@@ -36,7 +36,7 @@
                 </div>
                 <div class="link-left-div">
                     {%for title in relevant_titles%}
-                    <a href="{{ url_for('chart_page', title=title) }}">{{title}}</a>
+                    <a href="{{ url_for('chart_page', title=title[0]) }}">{{title[0]}}<br>feita por {{title[2]}} em {{title[3]}}</a>
                     {%endfor%}
                 </div>
             </div>
@@ -48,7 +48,7 @@
                 </div>
                 <div class="link-middle-div">
                     {%for title in recent_titles%}
-                    <a href="{{ url_for('chart_page', title=title) }}">{{title}}</a>
+                    <a href="{{ url_for('chart_page', title=title[0]) }}">{{title[0]}}<br>feita por {{title[2]}} em {{title[1]}}</a>
                     {%endfor%}
                 </div>
             </div>
@@ -60,7 +60,7 @@
                 </div>
                 <div class="link-right-div">
                     {%for title in titles%}
-                    <a href="{{ url_for('chart_page', title=title) }}">{{title}}</a>
+                    <a href="{{ url_for('chart_page', title=title[0]) }}">{{title[0]}}<br>feita por {{title[1]}} em {{title[2]}}</a>
                     {%endfor%}
                 </div>
             </div>
