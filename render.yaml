@@ -1,9 +1,1 @@
-services:
-  - name: web
-    env:
-      - key: PYTHON_VERSION
-        value: 3.11.4
-    buildCommand: python -m pip install -r requirements.txt
-    startCommand: gunicorn -b 0.0.0.0:8080 charts:charts
 
-    
