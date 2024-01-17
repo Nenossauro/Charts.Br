@@ -66,17 +66,17 @@ class user_check:
 os.system("cls")
 
 # Create a Flask charts instance and set a secret key to handle sessions
-charts = Flask(__name__)
-charts.secret_key = 'enzo'
+app = Flask(__name__)
+app.secret_key = 'enzo'
 
 # Define route to render index.html template
-@charts.route('/')
+@app.route('/')
 def index():
     error_state = request.args.get('error_state', 'hidden')  
     error_message = request.args.get('error_message', '')    
     return render_template('index.html', visible = error_state, error = error_message)
 
-@charts.route('/land')
+@app.route('/land')
 def land():
     if 'user_logged' not in session or session['user_logged'] == None:
         return redirect('/')
@@ -98,7 +98,7 @@ def land():
 
     return render_template('land.html', user_name = session['user_logged'],profile_pic =  usercheck.pic, relevant_titles = comments, recent_titles = dates, titles = titles)
 
-@charts.route('/land/<title>')
+@app.route('/land/<title>')
 def chart_page(title):
     if 'user_logged' not in session or session['user_logged'] == None:
         return redirect('/')
@@ -216,7 +216,7 @@ def chart_page(title):
             return render_template('chart_page.html',num_comments = aux_comm,comments = comments_array,commenters = commenter_array, 
                                    user_name = session['user_logged'],profile_pic =  usercheck.pic, chart_description = aux_desc, chart_tittle=aux_title,chart_topic = aux_topic,chart_topic2 = aux_topic2, pie_chart_json = pie_chart_json, chart_creation = aux_creation, chart_author = aux_author )
         
-@charts.route('/comment',methods=['POST','GET',])
+@app.route('/comment',methods=['POST','GET',])
 def comment():
     comment = request.form['comentario']
     url = request.form['chart_url']
@@ -224,7 +224,7 @@ def comment():
     col_charts.update_one({'title':url},{'$inc':{'comments':1}})
     return redirect(request.referrer)
              
-@charts.route('/criar-chart')
+@app.route('/criar-chart')
 def create_chart():
     usercheck = user_check(user="")
     usercheck.check(session['user_logged'])
@@ -235,7 +235,7 @@ def create_chart():
         sub_array.append(info['sub_topic'])
     return render_template('create_chart.html',user_name = session['user_logged'],profile_pic =  usercheck.pic,topics = combo_topics["ava_topic"], sub_topic = sub_array)
 
-@charts.route('/inserir-chart',methods=['POST',])
+@app.route('/inserir-chart',methods=['POST',])
 def insert_chart():
     
     chart_tittle = request.form['txttitulo']
@@ -258,13 +258,13 @@ def insert_chart():
     return redirect(f'/land/{chart_tittle}')
 
 
-@charts.route('/profile')
+@app.route('/profile')
 def profile():
     usercheck = user_check(user="")
     usercheck.check(session['user_logged'])
     return render_template('profile.html',user_name = session['user_logged'],password = usercheck.pwd,email = usercheck.email,profile_pic = usercheck.pic,name = session['name'],user=session['user_logged'])
 
-@charts.route('/profile/change_pic', methods=['POST',])
+@app.route('/profile/change_pic', methods=['POST',])
 def cng_pic():
     pic = request.files['img']
     new_pic = base64.b64encode(pic.read()).decode('utf-8')
@@ -273,14 +273,14 @@ def cng_pic():
     return redirect('/profile')
 
 
-@charts.route('/profile/change_email')
+@app.route('/profile/change_email')
 def cng_email():
     return render_template('email.html',user_name = session['user_logged'])
-@charts.route('/profile/change_password')
+@app.route('/profile/change_password')
 def cng_password():
     return render_template('password.html',user_name = session['user_logged'])
 
-@charts.route('/profile/mycharts')
+@app.route('/profile/mycharts')
 def mycharts():
     usercheck = user_check(user="")
     usercheck.check(session['user_logged'])
@@ -292,13 +292,13 @@ def mycharts():
         types.append(aux_charts['type'])
     return render_template("my_charts.html",profile_pic =  usercheck.pic, chart_title = titles, user_name=session['user_logged'])
 
-@charts.route('/adicionar-informações')
+@app.route('/adicionar-informações')
 def add_info():
     usercheck = user_check(user="")
     usercheck.check(session['user_logged'])
     return render_template('add_info.html', user_name = session['user_logged'],profile_pic =  usercheck.pic)
 
-@charts.route('/inserir-info',methods=['POST',])  
+@app.route('/inserir-info',methods=['POST',])  
 def insert_info():
         info_questions = [ "Animal Favorito","Cor Favorita","Idade","Como veio","Tem pet", "Musica Favorita",
                           "Já saiu do país","Metros de Altura","Quantidade de livros lidos esse ano","Já saiu do estado","Está trabalhando","Filme Favorito","Genero de Musica","Genero de Filme",
@@ -312,7 +312,7 @@ def insert_info():
 
         return redirect('/land')
 # Define route for registration form submission
-@charts.route('/registrar', methods=['POST',])
+@app.route('/registrar', methods=['POST',])
 def regis():
     # Create a new user object with form data
     new_user = user_obj(
@@ -371,7 +371,7 @@ def regis():
     return redirect('/land')
 
 # Define route for authentication of user
-@charts.route('/logar',methods=['POST',])
+@app.route('/logar',methods=['POST',])
 # Run the Flask charts
 def logar():
   # Retrieve the username and password submitted in the login form
@@ -408,11 +408,11 @@ def logar():
         error_message = "Usuario não existe!!"
         return redirect(f'/?error_state={error_state}&error_message={error_message}')
 
-@charts.route('/logout',methods=['POST',])
+@app.route('/logout',methods=['POST',])
 def logout():
    if 'user_logged' not in session or session['user_logged'] == None:
         return redirect('/') 
    session['user_logged'] = None
    return redirect('/')
 
-#charts.run()
+#app.run()
