@@ -276,6 +276,7 @@ def cng_pic():
 @app.route('/profile/change_email')
 def cng_email():
     return render_template('email.html',user_name = session['user_logged'])
+
 @app.route('/profile/change_password')
 def cng_password():
     return render_template('password.html',user_name = session['user_logged'])

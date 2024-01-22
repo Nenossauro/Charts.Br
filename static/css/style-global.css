@@ -238,8 +238,7 @@ nav{
 
     /*   USER USERNAME   */
     .navbar-user-username{
-        margin: 2rem;
-        margin-left: 0;
+        margin: 2rem 3rem 2rem 0rem;
 
         color: var(--primary-color);
         font-size: 2rem;
@@ -248,12 +247,20 @@ nav{
     }    
 
 	/*   USER IMAGE    */
-	.user-img, .user-img img{
-		height: 100%;
+	.user-img{
+        height: 80%;
+        width: 80%;
+        margin-right: 3rem;
+	}
+    .user-img img{
+        height: 100%;
         width: 100%;
 		cursor: pointer;
         aspect-ratio: 1/1;
-	}
+        border-radius: 100%;
+
+
+    }
 
 
 /*   N A V B A R   D I V I D E   */
@@ -523,7 +530,7 @@ main{
 .home-main{
     display: flex;
     flex-direction: column;
-    height: calc(100vh - 8.5rem);
+    height: calc(100vh - 16.5rem);
 }
 .main-section-wrap{
     display: flex;
@@ -649,7 +656,7 @@ main{
     /*   F O O T E R   */
     footer{
         width: 100%;
-        padding: 3rem 0 3rem 0;
+        height: 8rem;
         color: var(--primary-font-color);
         font-weight: 500;
         font-family: Inter Tight;
@@ -982,8 +989,9 @@ main{
     .editprofile-main{
         width: 70%;
         display: flex;
+        flex-direction: column;
+        justify-content: space-between;
         margin: auto;
-        height: calc(100vh - 18.5rem);
     }
         .editprofile-section{
                 width: 100%;
@@ -995,28 +1003,33 @@ main{
                     font-size: 4rem;
                     margin-right: 1rem;
                 }
-                .alter-profile-image form{
-                    width: auto;
-                    height: auto;
-                }
-                    .alter-profile-image input{
-                        display: flex;
+                .alter-profile-image label{
+                    display: flex;
                         flex-direction: column;
                         align-items: center;
                         justify-content: center;
-                        height: 5rem;
-                        width: 6rem;
-                        font-size: 3rem;    
+                        height: 100%;
+                        width: 100%;
+                        font-size: 3rem;
+                        
 
                         border: 0.2rem solid var(--primary-font-color);
                         border-radius: 1rem;
 
                         cursor: pointer;
                         transition: 0.3s ease-in-out;
+
+                }
+                .alter-profile-image form{
+                    width: 5rem;
+                    height: 5rem;
+                }
+                .alter-profile-image input{
+                    display: none;
+                }
+                    .alter-profile-image label:hover{
+                        background-color: var(--primary-font-color);
                     }
-                        .alter-profile-image input:hover{
-                            background-color: var(--primary-font-color);
-                        }
 
 
             .editprofile-article{
@@ -1026,7 +1039,7 @@ main{
             }
                 .editprofile-article .top-inner-article-div{
                     display: flex;
-                    height: 30%;
+                    height: auto;
                     width: 100%;
                     margin-bottom: 5rem;
                 }
@@ -1034,6 +1047,7 @@ main{
                         aspect-ratio: 1/1;
                         width: auto;
                         height: 100%;
+                        border-radius: 100%;
                     }            
                     .left-group{
                         display: flex;
@@ -1124,13 +1138,15 @@ main{
     .alter-profile-image{
 		font-size: 4rem;
         padding-top: 1rem;
+        width: 5rem;
+        height: 5rem;
 	}
         .alter-profile-image .btn-div{
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			height: 5rem;
-			width: 6rem;
+			height: 100%;
+			width: 100%;
 
 			border: 0.2rem solid var(--primary-font-color);
 			border-radius: 1rem;
@@ -1549,7 +1565,7 @@ main{
         padding-left: 0;
     }
 }
-@media screen and (max-width: 515px) {
+@media screen and (max-width: 600px) {
     .navbar-user-username{
         position: absolute;
         visibility: hidden;
@@ -1592,6 +1608,9 @@ main{
     .addinfo-aside, .addinfo-section{
         width: auto;
     }
+    .addinfo-section .addinfo-section-wrapper{
+        flex-direction: column;
+    }
     .addinfo-section .left-inner-section-div{
         align-items: center;
     }
@@ -1633,6 +1652,12 @@ main{
 }
 
 /* EDIT PROFILE */
+@media screen and (max-width: 1700px) {
+    .editprofile-article .left-group .user-name-div{
+        font-size: auto;
+    }
+}
+
 @media screen and (max-width: 1300px) {
     .editprofile-section{
         padding: 5% 0 0 0;
