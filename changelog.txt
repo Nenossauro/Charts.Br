@@ -1,9 +1,12 @@
 Charts 1.0.1 (22/01/2024)
-    - 
+    - Land page height ajustada para nao apresentar barra de scroll.
+    - Foto de perfil da navbar arredondada e foi adicionada uma margin.
+    - Botão de alterar foto de perfil foi 100% terminado.
+    - Bug de responsividade na pagina de "Adicionar Perguntas".
 
 Charts 1.0 (17/01/2024)
-    - Todas as mudanças feitas até aqui desde a criação do Charts como um projeto escolar
-    - Adicionado o nome do criador e a data de criação de cada chart em seu display na tela inical
-    - Removido a antia redundancia na hora de selecionar uma foto de perfil, agora basta apenas um botão
-    - Removido qualquer usuario que apresentasse um campo vazio nas respostas durante a fase de teste do Charts
-    - Toranda obritario a resposta de todas as perguntas em "Adicionar informação"
+    - Todas as mudanças feitas até aqui desde a criação do Charts como um projeto escolar.
+    - Adicionado o nome do criador e a data de criação de cada chart em seu display na tela inical.
+    - Removido a antia redundancia na hora de selecionar uma foto de perfil, agora basta apenas um botão.
+    - Removido qualquer usuario que apresentasse um campo vazio nas respostas durante a fase de teste do Charts.
+    - Toranda obritario a resposta de todas as perguntas em "Adicionar informação".
