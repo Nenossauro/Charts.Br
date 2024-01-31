@@ -1218,7 +1218,7 @@ main{
             .changeemail-section .low-inner-section-div, .changepass-section .low-inner-section-div{
             visibility: hidden;  
             opacity: 0;
-            transition: 0.3s ease-in;
+            transition: 5s ease-in;
         }
         .changeemail-section .low-inner-section-div.after, .changepass-section .low-inner-section-div.after{
                 visibility: visible;

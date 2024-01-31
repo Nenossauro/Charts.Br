@@ -95,7 +95,7 @@ $(document).ready(function() {
         $('.alterBtn').on('click', function(){
           $('.low-inner-section-div').addClass('after')
         })
-  
+        
         //VOLTAR PRA PAGINA ANTERIOR
         $('#goBack').on('click', function(){
           history.back()
