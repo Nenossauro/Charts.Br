@@ -1,3 +1,7 @@
+Charts 1.0.2 (31/01/2024)
+    - Funções de troca de email e senha agora disponiveis
+    
+
 Charts 1.0.1 (22/01/2024)
     - Land page height ajustada para nao apresentar barra de scroll.
     - Foto de perfil da navbar arredondada e foi adicionada uma margin.
