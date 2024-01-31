@@ -17,7 +17,7 @@
             </div>
 
 
-
+            <form action="/profile/change_email/check_email" method="post">
             <div class="input-div">
                 <div class="input-div-span">
                     <span>
@@ -26,18 +26,18 @@
                 </div>
 
                 <div class="input-inner-div">
-                    <input type="text">
+                    <input type="text" name="email_to_check">
                 </div>
                 
             </div>
             <div class="alter-btn">
-                <input type="button" class="alterBtn" id="btn" value="Confirmar">
+                <input type="submit" class="alterBtn" id="btn" value="Confirmar">
             </div>
-
+            </form>
 
         </div>
 
-        <div class="low-inner-section-div">
+        <div class="low-inner-section-div{{email_validity}}">
             <div class="low-inner-section-div-span">
                 <span>
                     Muito bem! Coloque seu e-mail novo e confirme-o logo em seguida.
@@ -46,29 +46,31 @@
                     Você finalmente terá trocado seu e-mail.
                 </span>
             </div>
-            <div class="input-div">
-                <div class="input-div-span">
-                    <span>
-                        Novo E-mail:
-                    </span>
+            <form action="/profile/change_email/alter_email" method="post">
+                <div class="input-div">
+                    <div class="input-div-span">
+                        <span>
+                            Novo E-mail:
+                        </span>
+                    </div>
+                    <div class="input-inner-div">
+                        <input type="text" name="email_to_alter">
+                    </div>
                 </div>
-                <div class="input-inner-div">
-                    <input type="text">
+                <div class="input-div">
+                    <div class="input-div-span">
+                        <span>
+                            Confirmar novo E-mail:
+                        </span>
+                    </div>
+                    <div class="input-inner-div">
+                        <input type="text" name="email_to_alter_confirm">
+                    </div>
                 </div>
-            </div>
-            <div class="input-div">
-                <div class="input-div-span">
-                    <span>
-                        Confirmar novo E-mail:
-                    </span>
+                <div class="alter-btn">
+                    <input type="submit" id="btn" value="Alterar">
                 </div>
-                <div class="input-inner-div">
-                    <input type="text">
-                </div>
-            </div>
-            <div class="alter-btn">
-                <input type="button" id="btn" value="Alterar">
-            </div>
+            </form>
         </div>
     </section>
 </main>

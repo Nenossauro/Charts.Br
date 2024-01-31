@@ -260,6 +260,8 @@ def insert_chart():
 
 @app.route('/profile')
 def profile():
+    session['visibility_check'] = ""
+    session['visibility_email'] = ""
     usercheck = user_check(user="")
     usercheck.check(session['user_logged'])
     return render_template('profile.html',user_name = session['user_logged'],password = usercheck.pwd,email = usercheck.email,profile_pic = usercheck.pic,name = session['name'],user=session['user_logged'])
@@ -275,11 +277,48 @@ def cng_pic():
 
 @app.route('/profile/change_email')
 def cng_email():
-    return render_template('email.html',user_name = session['user_logged'])
+    return render_template('email.html',user_name = session['user_logged'],email_validity = session['visibility_email'])
+
+@app.route('/profile/change_email/check_email', methods=['POST',])
+def check_email():
+    email_to_check = request.form['email_to_check']
+    usercheck = user_check(user="")
+    usercheck.check(session['user_logged'])
+    if email_to_check == usercheck.email:
+        session['visibility_email'] = ".after"
+        return redirect('/profile/change_email')
+    else:
+        session['visibility_email'] = ""
+        return redirect('/profile/change_email')
+
+@app.route('/profile/change_email/alter_email', methods=['POST',])
+def alter_email():
+    email_to_alter = request.form['email_to_alter']
+    col_users.update_one({'user':session['user_logged']},{"$set":{'email':email_to_alter}})
+    return redirect('/profile')
+
 @app.route('/profile/change_password')
 def cng_password():
-    return render_template('password.html',user_name = session['user_logged'])
+    
+    return render_template('password.html',user_name = session['user_logged'],pass_validity = session['visibility_check'] )
 
+@app.route('/profile/change_password/check_pass', methods=['POST',])
+def check_pass():
+    pass_to_check = request.form['pass_to_check']
+    usercheck = user_check(user="")
+    usercheck.check(session['user_logged'])
+    if pass_to_check == usercheck.pwd:
+        session['visibility_check'] = ".after"
+        return redirect('/profile/change_password')
+    else:
+        session['visibility_check'] = ""
+        return redirect('/profile/change_password')
+
+@app.route('/profile/change_password/alter_pass', methods=['POST',])
+def alter_pass():
+    pass_to_alter = request.form['pass_to_alter']
+    col_users.update_one({'user':session['user_logged']},{"$set":{'password':pass_to_alter}})
+    return redirect('/profile')
 @app.route('/profile/mycharts')
 def mycharts():
     usercheck = user_check(user="")
@@ -397,6 +436,8 @@ def logar():
             session['user_logged'] = username
             session['name'] = usercheck.name
             session['id'] = str(usercheck.id)
+            session['visibility_check'] = ""
+            session['visibility_email'] = ""
             return redirect('/land')
         else:
             # If the submitted password doesn't match, redirect to the index page (login page)
@@ -415,4 +456,4 @@ def logout():
    session['user_logged'] = None
    return redirect('/')
 
-#app.run()
+app.run()
