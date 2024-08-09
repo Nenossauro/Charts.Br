@@ -11,32 +11,20 @@
             <div class="inner-span-section-div">
                 <span>
                     {{chart_tittle}}!
+                    
                 </span>
-                <div class="like-div">
-                    <button x-data="{
-                        state: 'Unliked',
-                        usedKeyboard: false,
-                        async updateState(to) {
-                            this.state = 'Saving'
-                            await new Promise(resolve => setTimeout(resolve, 1000))
-                            this.state = to
-                        }
-                      }" :class="{
-                        'like unliked': state === 'Unliked',
-                        'like saving': state === 'Saving',
-                        'like liked': state === 'Liked',
-                        'focus:outline-none': !usedKeyboard
-                      }" @click="updateState(state === 'Unliked' ? 'Liked' : 'Unliked')" @keydown.window.tab="usedKeyboard = true">
-                        <span class="like-icon like-icon-state" aria-label="state" x-text="state" aria-live="polite">Unliked</span>
-                      </button>
-                </div>
+                
+                
             </div>
+            <span class="error">
+                {{erro}}
+            </span>
             <div class="inner-content-section-div">
                 <div class="main-charts-section" id="chart">
                     <script>
                         // Obter as visualizações JSON dos gráficos do Flask
                         var chart = {{ pie_chart_json | safe }};
-               
+                        
                        // Renderizar os gráficos usando Vega-Embed
                        vegaEmbed('#chart', chart).catch(console.error);
                    </script>  

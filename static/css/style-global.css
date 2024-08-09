@@ -18,7 +18,7 @@
     --secondary-font-color: #fff;
     --link-font-color: #007AAE;
     --desc-title-color: #D90;
-
+    --error-color: #c02318;
     --error-background: #f44336;
 }
 .dark-mode{
@@ -1251,6 +1251,13 @@ main{
         height: auto;
         flex-direction: column;
     }
+    .error{
+        color: var(--error-color);
+            font-family: Fira Code;
+            font-size: 6rem;
+            font-style: normal;
+            font-weight: 600;
+        }
     .top-wrapper-div{
         display: flex;
         flex-direction: row;
