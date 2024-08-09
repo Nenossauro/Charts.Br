@@ -3,8 +3,10 @@ from flask import Flask, render_template, request, redirect, session, flash
 from bson.objectid import ObjectId
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
+from datetime import datetime 
 import pymongo as mongo
 import os, datetime, altair, pandas, base64
+
 
 # MongoDB connection URL
 url = "mongodb+srv://admin:admin@cluster0.blievi7.mongodb.net/?retryWrites=true&w=majority"
@@ -61,6 +63,7 @@ class user_check:
         self.user = aux_user
         self.pic = aux_img
         self.name = aux_name
+
 
 # Clear console screen for better visualisation
 os.system("cls")
@@ -122,6 +125,8 @@ def chart_page(title):
         comments_array.append(comment['comment'])
         commenter_array.append(comment['user'])
         #commenter_pic_array.append(comment['user_pic'])
+
+
     if aux_type=="simple":
         aux_topic = chart_data['topic1']
         user_topics = []
@@ -155,7 +160,7 @@ def chart_page(title):
             aux_topic = chart_data['topic1']
             aux_topic2 = chart_data['topic2']
             aux_subtopic = chart_data['subtopic2']
-            user_topics = []
+            user_topics = [] 
             user_data = col_users.find({
                 '$and': [
                     { aux_topic: { '$exists': True } },
@@ -163,24 +168,30 @@ def chart_page(title):
                 ]
             })
             user_topics = [each[aux_topic] for each in user_data]
-            df = pandas.DataFrame({'category': user_topics})
-            counts = df['category'].value_counts().sort_index()
-            chart_df = pandas.DataFrame({'Topic': counts.index, 'Frequency': counts.values})
-            chart_df['ratio'] = round((chart_df['Frequency']/len(user_topics)*100))
-            pie_chart = altair.Chart(chart_df).mark_arc(size=100).encode(
-                theta='ratio:Q',
-                color='Topic:N',
-                tooltip='Frequency:N'
-                
-            ).properties(
-            width=919,
-            height=529,
-            title=title
-            )
+            if len(user_topics) == 0:
+                erro = "Não há dados suficientes!"
+                return render_template('chart_page.html',num_comments = aux_comm,comments = comments_array,commenters = commenter_array, #comenters_pic = commenter_pic_array,
+                                    user_name = session['user_logged'],profile_pic =  usercheck.pic, chart_description = aux_desc, chart_tittle=aux_title,chart_topic = aux_topic,chart_topic2 = aux_topic2, chart_author = aux_author, erro = erro )
+            else:
+                df = pandas.DataFrame({'category': user_topics})
+                counts = df['category'].value_counts().sort_index()
+                chart_df = pandas.DataFrame({'Topic': counts.index, 'Frequency': counts.values})
+                chart_df['ratio'] = round((chart_df['Frequency']/len(user_topics)*100))
+                pie_chart = altair.Chart(chart_df).mark_arc(size=100).encode(
+                    theta='ratio:Q',
+                    color='Topic:N',
+                    tooltip='Frequency:N'
+                    
+                ).properties(
+                width=919,
+                height=529,
+                title=title
+                )
 
-            pie_chart_json = pie_chart.to_json()
-            return render_template('chart_page.html',num_comments = aux_comm,comments = comments_array,commenters = commenter_array, #comenters_pic = commenter_pic_array,
-                                   user_name = session['user_logged'],profile_pic =  usercheck.pic, chart_description = aux_desc, chart_tittle=aux_title,chart_topic = aux_topic,chart_topic2 = aux_topic2, pie_chart_json = pie_chart_json, chart_creation = aux_creation, chart_author = aux_author )
+                pie_chart_json = pie_chart.to_json()
+                return render_template('chart_page.html',num_comments = aux_comm,comments = comments_array,commenters = commenter_array, #comenters_pic = commenter_pic_array,
+                                    user_name = session['user_logged'],profile_pic =  usercheck.pic, chart_description = aux_desc, chart_tittle=aux_title,chart_topic = aux_topic,chart_topic2 = aux_topic2, pie_chart_json = pie_chart_json, chart_creation = aux_creation, chart_author = aux_author )
+        
         else:
             aux_topic = chart_data['topic1']
             aux_topic2 = chart_data['topic2']
@@ -214,7 +225,7 @@ def chart_page(title):
 
             pie_chart_json = pie_chart.to_json()
             return render_template('chart_page.html',num_comments = aux_comm,comments = comments_array,commenters = commenter_array, 
-                                   user_name = session['user_logged'],profile_pic =  usercheck.pic, chart_description = aux_desc, chart_tittle=aux_title,chart_topic = aux_topic,chart_topic2 = aux_topic2, pie_chart_json = pie_chart_json, chart_creation = aux_creation, chart_author = aux_author )
+                                    user_name = session['user_logged'],profile_pic =  usercheck.pic, chart_description = aux_desc, chart_tittle=aux_title,chart_topic = aux_topic,chart_topic2 = aux_topic2, pie_chart_json = pie_chart_json, chart_creation = aux_creation, chart_author = aux_author )
         
 @app.route('/comment',methods=['POST','GET',])
 def comment():
@@ -239,7 +250,7 @@ def create_chart():
 def insert_chart():
     
     chart_tittle = request.form['txttitulo']
-    chart_date = request.form['txtdata']
+    chart_date = datetime.datetime.now().strftime("%d/%m/%Y %H:%M")
     chart_description = request.form['txtdescricao']
     chart_topic1 = request.form['first-select']
     chart_topic2 = request.form['second-select']
